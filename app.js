@@ -5,7 +5,7 @@ const Intern = require("./lib/Intern");
 const inquirer = require("inquirer");
 const path = require("path");
 const fs = require("fs");
-const {promisify} = require('util');
+const { promisify } = require('util');
 
 const writeFile = promisify(fs.writeFile);
 
@@ -32,7 +32,7 @@ const employeeQuestions = [
     },
 ];
 const managerQuestions = [
-    ...employeeQuestions, 
+    ...employeeQuestions,
     {
         type: 'input',
         name: 'officeNumber',
@@ -40,7 +40,7 @@ const managerQuestions = [
     }
 ]
 const engineerQuestions = [
-    ...employeeQuestions, 
+    ...employeeQuestions,
     {
         type: 'input',
         name: 'github',
@@ -48,7 +48,7 @@ const engineerQuestions = [
     }
 ]
 const internQuestions = [
-    ...employeeQuestions, 
+    ...employeeQuestions,
     {
         type: 'input',
         name: 'school',
@@ -56,23 +56,23 @@ const internQuestions = [
     }
 ]
 
-function internPrompts(){
+function internPrompts() {
     return inquirer.prompt(internQuestions);
 }
 
-function managerPrompts(){
+function managerPrompts() {
     return inquirer.prompt(managerQuestions);
 }
 
-function engineerPrompts(){
+function engineerPrompts() {
     return inquirer.prompt(engineerQuestions);
 }
 
 function start() {
     return inquirer.prompt([
-        { 
-            type: 'list', 
-            name: 'employeeType', 
+        {
+            type: 'list',
+            name: 'employeeType',
             message: 'Choose and employee type',
             choices: [
                 'Manager',
@@ -83,39 +83,39 @@ function start() {
     ])
 }
 const employees = []
-async function init(){
+async function init() {
     const { employeeType } = await start()
 
-    if(employeeType === 'Engineer'){
-        const {id, email, name, github} = await engineerPrompts();
+    if (employeeType === 'Engineer') {
+        const { id, email, name, github } = await engineerPrompts();
         const engineer = new Engineer(name, id, email, github)
         employees.push(engineer);
     }
 
-    if(employeeType === 'Manager'){
-        const {name, id, email , officeNumber} = await managerPrompts();
-        const manager = new Manager(name, id, email ,officeNumber)
+    if (employeeType === 'Manager') {
+        const { name, id, email, officeNumber } = await managerPrompts();
+        const manager = new Manager(name, id, email, officeNumber)
         employees.push(manager)
     }
 
-    if(employeeType === 'Intern'){
-        const {name, id, email,school} = await internPrompts();
+    if (employeeType === 'Intern') {
+        const { name, id, email, school } = await internPrompts();
         const intern = new Intern(name, id, email, school)
         employees.push(intern)
     }
 
 
-    const {proceed} = await inquirer.prompt([{
+    const { proceed } = await inquirer.prompt([{
         type: 'confirm',
         name: 'proceed',
         message: 'Would you like to keep adding employees?'
-    }]) 
+    }])
 
-    if(proceed){
+    if (proceed) {
         init()
-    }else{
+    } else {
         const html = render(employees)
-        if(!fs.existsSync(OUTPUT_DIR)){
+        if (!fs.existsSync(OUTPUT_DIR)) {
             fs.mkdirSync(OUTPUT_DIR)
         }
         await writeFile(outputPath, html);
