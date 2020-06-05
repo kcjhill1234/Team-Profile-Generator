@@ -1,8 +1,12 @@
 {
-  "name": "unit10hw",
+  "name": "homework-8",
   "version": "1.0.0",
   "description": "OOP and testing for week 10 homework",
   "main": "app.js",
+  "preferGlobal": true,
+  "bin": {
+    "team-builder": "app.js"
+  },
   "directories": {
     "lib": "lib",
     "test": "test"
